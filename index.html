@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Genetic Evolution Simulator</title>
+
+<style>
+
+body{
+margin:0;
+background:#020617;
+color:white;
+font-family:Arial;
+overflow:hidden;
+text-align:center;
+}
+
+h1{
+position:absolute;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+}
+
+canvas{
+display:block;
+}
+
+button{
+position:absolute;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+padding:10px 20px;
+font-size:16px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🧬 Genetic Evolution Simulator</h1>
+
+<canvas id="evolution"></canvas>
+
+<button onclick="mutate()">Trigger Mutation</button>
+
+<script>
+
+const canvas=document.getElementById("evolution");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let organisms=[];
+
+/* CREATE ORGANISMS */
+
+for(let i=0;i<25;i++){
+
+organisms.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:6+Math.random()*6,
+speed:1+Math.random()*1.5,
+color:"hsl("+Math.random()*360+",80%,60%)"
+});
+
+}
+
+/* MUTATION */
+
+function mutate(){
+
+organisms.forEach(o=>{
+
+if(Math.random()<0.3){
+
+o.size+=Math.random()*2-1;
+o.speed+=Math.random()*0.5-0.25;
+o.color="hsl("+Math.random()*360+",80%,60%)";
+
+}
+
+});
+
+}
+
+/* DRAW */
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+organisms.forEach(o=>{
+
+o.x+=Math.random()*o.speed-o.speed/2;
+o.y+=Math.random()*o.speed-o.speed/2;
+
+ctx.beginPath();
+ctx.arc(o.x,o.y,o.size,0,Math.PI*2);
+ctx.fillStyle=o.color;
+ctx.fill();
+
+});
+
+/* DNA HELIX VISUAL */
+
+for(let i=0;i<canvas.height;i+=40){
+
+let x1=canvas.width/2+Math.sin(i*0.02)*80;
+let x2=canvas.width/2-Math.sin(i*0.02)*80;
+
+ctx.beginPath();
+ctx.moveTo(x1,i);
+ctx.lineTo(x2,i);
+
+ctx.strokeStyle="rgba(0,200,255,0.2)";
+ctx.stroke();
+
+}
+
+requestAnimationFrame(draw);
+
+}
+
+draw();
+
+</script>
+
+</body>
+</html>
